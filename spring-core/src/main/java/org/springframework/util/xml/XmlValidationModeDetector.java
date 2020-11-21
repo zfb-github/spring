@@ -94,11 +94,11 @@ public class XmlValidationModeDetector {
 			boolean isDtdValidated = false;
 			String content;
 			while ((content = reader.readLine()) != null) {
-				content = consumeCommentTokens(content);
-				if (this.inComment || !StringUtils.hasText(content)) {
+				content = consumeCommentTokens(content); /** 去掉空行 或 注释内容 */
+				if (this.inComment || !StringUtils.hasText(content)) {  /** 判断content是否还包含内容 */
 					continue;
 				}
-				if (hasDoctype(content)) {
+				if (hasDoctype(content)) { /** 是否需要 dtd验证模式 */
 					isDtdValidated = true;
 					break;
 				}
@@ -141,12 +141,13 @@ public class XmlValidationModeDetector {
 	/**
 	 * Consume all leading and trailing comments in the given String and return
 	 * the remaining content, which may be empty since the supplied content might
-	 * be all comment data.
+	 * be all comment data. 去掉注释 和 空行
 	 */
 	@Nullable
 	private String consumeCommentTokens(String line) {
 		int indexOfStartComment = line.indexOf(START_COMMENT);
 		if (indexOfStartComment == -1 && !line.contains(END_COMMENT)) {
+			/** 不包含注释 */
 			return line;
 		}
 

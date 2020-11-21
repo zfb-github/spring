@@ -137,8 +137,16 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 	public ClassPathXmlApplicationContext(
 			String[] configLocations, boolean refresh, @Nullable ApplicationContext parent)
 			throws BeansException {
-
+		/**
+		 * 初始化 AbstractApplicationContext
+		 * 设置此上下文容器的父容器  合并 Environment
+		 */
 		super(parent);
+		// 设置配置文件(变量在 AbstractRefreshableConfigApplicationContext 中，本类是它的子类 )
+		/**
+		 * 1、创建StandardEnvironment对象，并设置环境属性到StandardEnvironment对象中
+		 * 2、间隙xml文件的文件名是否存在 #{}占位符 ，若存在则替换成对应的值
+		 */
 		setConfigLocations(configLocations);
 		if (refresh) {
 			refresh();
