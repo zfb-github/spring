@@ -324,7 +324,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		}
 
 		Set<EncodedResource> currentResources = this.resourcesCurrentlyBeingLoaded.get();
-
+		// 判断当前 配置文件是否解析
 		if (!currentResources.add(encodedResource)) {
 			throw new BeanDefinitionStoreException(
 					"Detected cyclic loading of " + encodedResource + " - check your import definitions!");
@@ -335,6 +335,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			if (encodedResource.getEncoding() != null) {
 				inputSource.setEncoding(encodedResource.getEncoding());
 			}
+			// 开始解析xml文件
 			return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
 		}
 		catch (IOException ex) {
@@ -387,7 +388,9 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			throws BeanDefinitionStoreException {
 
 		try {
+			// 解析xml文件 成 document
 			Document doc = doLoadDocument(inputSource, resource);
+			// 解析Document对象
 			int count = registerBeanDefinitions(doc, resource);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded " + count + " bean definitions from " + resource);
@@ -506,8 +509,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see BeanDefinitionDocumentReader#registerBeanDefinitions
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
+		// 从document对象中解析 默认标签(如：import、bean、beans、alias)
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
 		int countBefore = getRegistry().getBeanDefinitionCount();
+		// 创建 XmlReaderContext，包含 NamespaceHandlerResolver此对象加载用来获取非默认标签的处理类
+		// 开始解析 document对象
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
 		return getRegistry().getBeanDefinitionCount() - countBefore;
 	}

@@ -137,8 +137,16 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 	public ClassPathXmlApplicationContext(
 			String[] configLocations, boolean refresh, @Nullable ApplicationContext parent)
 			throws BeansException {
-
+		/**
+		 *  1、创建PathMatchingResourcePatternResolver
+		 *  2、如果 parent 不为null，进行环境变量合并
+		 */
 		super(parent);
+
+		/**
+		 *  1、创建 StandardEnvironment ，加载 系统变量和系统属性， 把StandardEnvironment对象给 BeanFactory ；
+		 *  2、创建 PropertyPlaceholderHelper， 赋给了StandardEnvironment，解析配置文件名称中的 EL 表达式；
+		 */
 		setConfigLocations(configLocations);
 		if (refresh) {
 			refresh();
